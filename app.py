@@ -114,8 +114,8 @@ def video_feed():
 
 @app.route('/')
 def index():
-    obj = getEmotion()
-    return render_template('index.html', predicted_emotion=obj[0],pred=obj[1])
+    #obj = getEmotion()
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
