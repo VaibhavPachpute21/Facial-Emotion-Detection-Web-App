@@ -14,7 +14,10 @@ face_haar_cascade = cv2.CascadeClassifier(
 
 app = Flask(__name__)
 
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+if not cap.isOpened():
+    print("Cannot open camera")
+    exit()
 
 
 def gen_frames():
