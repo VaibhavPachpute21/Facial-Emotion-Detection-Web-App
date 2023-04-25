@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <title>Real Time Emotion Detection</title>
+</head>
+
+<body style="color: black;background-color: #E9EBEE;">
+  <div class="d-flex justify-content-center p-4">
+    <div class="container">
+      <h3>Real Time Emotion Detection</h3>
+      <div class="row p-2 bg-light border border-primary rounded">
+        <div class=" col-lg-5">
+          <img class="p-2" src="{{ url_for('video_feed') }}" width="100%" height="600px">
+        </div>
+        <div class="col-lg-7">
+          <p>Emotion Data Analysis</p>
+          <div class="row">
+            <div class="col-md-8"> <canvas id="barGraph"></canvas></div>
+            <div class="col-md-4"> <canvas id="doughnutGraph"></canvas></div>
+          </div>
+          <!-- <div ><canvas id="lineGraph"></canvas></div> -->
+          <canvas id="timeLineGraph" style="width:100%;max-width:600px"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+    var timeLine = [0];
+
+
+    var timeLineGraph = new Chart("timeLineGraph", {
+      type: "line",
+      data: {
+        labels: timeLine,
+        datasets: [{
+          data: [0],
+          borderColor: "#FF0000 ",
+          fill: false,
+          label:"Angry"
+        }, {
+          data: [0],
+          borderColor: "#9932CC",
+          fill: false,
+          label:"Disgust"
+        }, {
+          data: [0],
+          borderColor: "#FFA500",
+          fill: false,
+          label:"Fear"
+        }, {
+          data: [0],
+          borderColor: "#FFFF00",
+          fill: false,
+          label:"Happy"
+        }, {
+          data: [0],
+          borderColor: "#0000FF",
+          fill: false,
+          label:"Sad"
+        }, {
+          data: [0],
+          borderColor: "#00FFFF",
+          fill: false,
+          label:"Surprise"
+        }, {
+          data: [0],
+          borderColor: "#C0C0C0",
+          fill: false,
+          label:"Neutral"
+        }]
+      },
+      options: {
+        legend: {
+          display: true
+        }
+      }
+    });
+
+    function updateTimeLineChart() {
+      fetch('/get_emotion_data')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data[3])
+          timeLineGraph.data.datasets[0].data.push(data[0]);
+          timeLineGraph.data.datasets[1].data.push(data[1]);
+          timeLineGraph.data.datasets[2].data.push(data[2]);
+          timeLineGraph.data.datasets[3].data.push(data[3]);
+          timeLineGraph.data.datasets[4].data.push(data[4]);
+          timeLineGraph.data.datasets[5].data.push(data[5]);
+          timeLineGraph.data.datasets[6].data.push(data[6]);
+          timeLine.push(new Date().getTime())
+          timeLineGraph.update();
+        });
+    }
+    setInterval(updateTimeLineChart, 9000);
+  </script>
+
+
+
+  <script>
+
+    var xValues = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'];
+    var yValues = [0, 0, 0, 0, 0, 0, 0];
+    var barColors = ["#FF0000", "#9932CC", "#FFA500", "#FFFF00", "#0000FF", "#00FFFF", "#C0C0C0"];
+
+    var chart = new Chart("barGraph", {
+      type: "bar",
+      data: {
+        labels: xValues,
+        datasets: [{
+          backgroundColor: barColors,
+          data: yValues
+        }]
+      },
+      options: {
+        legend: { display: false },
+        // title: {
+        //   display: true,
+        //   text: "Analysis Data Graph"
+        // }
+      }
+    });
+
+
+    var chart1 = new Chart("doughnutGraph", {
+      type: "doughnut",
+      data: {
+        labels: xValues,
+        datasets: [{
+          backgroundColor: barColors,
+          data: yValues
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        // title: {
+        //   display: true,
+        //   text: "Doughnut Graph"
+        // }
+      }
+    });
+
+    var chart2 = new Chart("lineGraph", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [{
+          label: "Emotion Data",
+          data: yValues,
+          borderColor: "#007bff",
+          fill: false
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        // title: {
+        //   display: true,
+        //   text: "Emotion Data Over Time"
+        // },
+        scales: {
+          xAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: "Emotion"
+            }
+          }],
+          yAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: "Count"
+            },
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+
+    function updateChart() {
+      fetch('/get_emotion_data')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data[3])
+          chart.data.datasets[0].data = data;
+          chart1.data.datasets[0].data = data;
+          chart2.data.datasets[0].data = data;
+          chart.update();
+          chart1.update();
+          chart2.update();
+        });
+    }
+    setInterval(updateChart, 1000);
+
+  </script>
+</body>
+
+</html>
