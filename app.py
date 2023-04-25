@@ -24,6 +24,7 @@ def gen_frames():
     while True:
         success, frame = camera.read()
         if not success:
+            print("NOONON")
             break
         else:
             gray_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -64,13 +65,12 @@ def getEmotion():
     while True:
         success, frame = camera.read()
         if not success:
+            print("Not Success")
             break
         else:
             gray_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
             faces_detected = face_haar_cascade.detectMultiScale(
                 gray_img, 1.32, 5)
-
             for (x, y, w, h) in faces_detected:
                 # print('WORKING')
                 cv2.rectangle(frame, (x, y), (x+w, y+h),
@@ -80,10 +80,8 @@ def getEmotion():
                 img_pixels = image.img_to_array(roi_gray)
                 img_pixels = np.expand_dims(img_pixels, axis=0)
                 img_pixels /= 255
-
                 predictions = model.predict(img_pixels)
                 max_index = np.argmax(predictions[0])
-
                 emotions = ['angry', 'disgust', 'fear',
                             'happy', 'sad', 'surprise', 'neutral']
                 predicted_emotion = emotions[max_index]
@@ -95,21 +93,18 @@ def getEmotion():
                 print(predictions)
                 print('++++++++++')
                 obj = [predicted_emotion, str(predictions)]
-
+                print("ojoe")
+                print(obj)
                 return obj
 
 
 @app.route('/get_emotion_data')
 def get_emotion_data():
     obj = getEmotion()
+    print("obje")
     print(obj)
-    # obj=json.dumps(obj[1])
     return Response(obj[1])
 
-@app.route('/json_data')
-def json_data():
-    obj = getEmotion()
-    return Response(obj[1])
 
 
 @app.route('/video_feed')

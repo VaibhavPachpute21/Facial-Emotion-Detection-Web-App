@@ -206,8 +206,9 @@
     function updateChart() {
       fetch('/get_emotion_data')
         .then(response => response.json())
-        console.log(data[3])
         .then(data => {
+          console.log("first")
+          console.log(data)
           chart.data.datasets[0].data = data;
           chart1.data.datasets[0].data = data;
           chart2.data.datasets[0].data = data;
