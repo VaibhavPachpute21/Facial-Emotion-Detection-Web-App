@@ -1,25 +1,16 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-  <title>Real Time Emotion Detection</title>
 </head>
+  <title>Real Time Emotion Detection</title>
 
 <body style="color: black;background-color: #E9EBEE;">
   <div class="d-flex justify-content-center p-4">
@@ -39,7 +30,6 @@
           <canvas id="timeLineGraph" style="width:100%;max-width:600px"></canvas>
         </div>
       </div>
-
       <video id="videoElement" width="640" height="480"></video>
       <button onclick="startVideo()">Start video</button>
 
@@ -52,10 +42,11 @@
       // use navigator.mediaDevices.getUserMedia() to start streaming the camera
       navigator.mediaDevices.getUserMedia({ video: true })
         .then((stream) => {
-          // set the video element's source to the camera stream
           videoElement.srcObject = stream;
+          // set the video element's source to the camera stream
         })
         .catch((err) => {
+          console.log("videoElement")
           console.error(err);
         });
       // try {
@@ -70,8 +61,6 @@
 
   <script>
     var timeLine = [0];
-
-
     var timeLineGraph = new Chart("timeLineGraph", {
       type: "line",
       data: {
@@ -87,8 +76,8 @@
           fill: false,
           label: "Disgust"
         }, {
-          data: [0],
           borderColor: "#FFA500",
+          data: [0],
           fill: false,
           label: "Fear"
         }, {
@@ -124,7 +113,8 @@
       fetch('/get_emotion_data')
         .then(response => response.json())
         .then(data => {
-          console.log(data[3])
+          console.log("emotiondata")
+          console.log(data)
           timeLineGraph.data.datasets[0].data.push(data[0]);
           timeLineGraph.data.datasets[1].data.push(data[1]);
           timeLineGraph.data.datasets[2].data.push(data[2]);
@@ -146,7 +136,6 @@
     var xValues = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'];
     var yValues = [0, 0, 0, 0, 0, 0, 0];
     var barColors = ["#FF0000", "#9932CC", "#FFA500", "#FFFF00", "#0000FF", "#00FFFF", "#C0C0C0"];
-
     var chart = new Chart("barGraph", {
       type: "bar",
       data: {
@@ -158,13 +147,8 @@
       },
       options: {
         legend: { display: false },
-        // title: {
-        //   display: true,
-        //   text: "Analysis Data Graph"
-        // }
       }
     });
-
 
     var chart1 = new Chart("doughnutGraph", {
       type: "doughnut",
@@ -179,10 +163,6 @@
         legend: {
           display: false
         },
-        // title: {
-        //   display: true,
-        //   text: "Doughnut Graph"
-        // }
       }
     });
 
@@ -201,10 +181,6 @@
         legend: {
           display: false
         },
-        // title: {
-        //   display: true,
-        //   text: "Emotion Data Over Time"
-        // },
         scales: {
           xAxes: [{
             display: true,
@@ -230,8 +206,8 @@
     function updateChart() {
       fetch('/get_emotion_data')
         .then(response => response.json())
+        console.log(data[3])
         .then(data => {
-          console.log(data[3])
           chart.data.datasets[0].data = data;
           chart1.data.datasets[0].data = data;
           chart2.data.datasets[0].data = data;
@@ -241,8 +217,6 @@
         });
     }
     setInterval(updateChart, 1000);
-
   </script>
 </body>
-
 </html>

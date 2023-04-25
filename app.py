@@ -103,7 +103,7 @@ def getEmotion():
 def get_emotion_data():
     obj = getEmotion()
     print(obj)
-    obj=json.dumps(obj[1])
+    # obj=json.dumps(obj[1])
     if obj is not None:
         return obj[1]
     else:
