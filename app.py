@@ -1,8 +1,5 @@
-import json
 import re
 from flask import Flask, render_template, Response, request
-import requests
-from bs4 import BeautifulSoup
 import cv2
 import numpy as np
 from tensorflow.keras.models import model_from_json
@@ -117,18 +114,8 @@ def video_feed():
 @app.route('/')
 def index():
     obj = getEmotion()
-    # angry = str(obj[1]).split(',')[0].replace('[', '').replace(']', '')
-    # disgust = str(obj[1]).split(',')[1].replace('[', '').replace(']', '')
-    # fear = str(obj[1]).split(',')[2].replace('[', '').replace(']', '')
-    # happy = str(obj[1]).split(',')[3].replace('[', '').replace(']', '')
-    # sad = str(obj[1]).split(',')[4].replace('[', '').replace(']', '')
-    # surprise = str(obj[1]).split(',')[5].replace('[', '').replace(']', '')
-    # neutral = str(obj[1]).split(',')[6].replace('[', '').replace(']', '')
-    # angry=angry, disgust=disgust, fear=fear, happy=happy, sad=sad, surprise=surprise, neutral=neutral, 
-    json_data = json.dumps({'data': obj[1]})
-
-    return render_template('index.html', predicted_emotion=obj[0],pred=obj[1], json_data=json_data)
+    return render_template('index.html', predicted_emotion=obj[0],pred=obj[1])
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
