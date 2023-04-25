@@ -104,10 +104,7 @@ def get_emotion_data():
     obj = getEmotion()
     print(obj)
     # obj=json.dumps(obj[1])
-    if obj is not None:
-        return obj[1]
-    else:
-        return str([0.14834878, 0.00268412, 0.03349219, 0.03085654, 0.15749457, 0.01248641, 0.61463743]);
+    return obj[1]
 
 @app.route('/json_data')
 def json_data():
