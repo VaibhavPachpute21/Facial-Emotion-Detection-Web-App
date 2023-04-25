@@ -104,7 +104,7 @@ def get_emotion_data():
     obj = getEmotion()
     print(obj)
     # obj=json.dumps(obj[1])
-    return obj[1]
+    return Response(obj[1])
 
 @app.route('/json_data')
 def json_data():
