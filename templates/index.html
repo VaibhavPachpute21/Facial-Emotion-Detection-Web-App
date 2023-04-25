@@ -41,22 +41,32 @@
       </div>
 
       <video id="videoElement" width="640" height="480"></video>
-    <button onclick="startVideo()">Start video</button>
+      <button onclick="startVideo()">Start video</button>
 
     </div>
   </div>
 
   <script>
     async function startVideo() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({video: true});
-            const videoElement = document.getElementById('videoElement');
-            videoElement.srcObject = stream;
-        } catch (err) {
-            console.log(err);
-        }
+      const videoElement = document.querySelector('videoElement');
+      // use navigator.mediaDevices.getUserMedia() to start streaming the camera
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+          // set the video element's source to the camera stream
+          videoElement.srcObject = stream;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      // try {
+      //   const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      //   const videoElement = document.getElementById('videoElement');
+      //   videoElement.srcObject = stream;
+      // } catch (err) {
+      //   console.log(err);
+      // }
     }
-</script>
+  </script>
 
   <script>
     var timeLine = [0];
@@ -70,37 +80,37 @@
           data: [0],
           borderColor: "#FF0000 ",
           fill: false,
-          label:"Angry"
+          label: "Angry"
         }, {
           data: [0],
           borderColor: "#9932CC",
           fill: false,
-          label:"Disgust"
+          label: "Disgust"
         }, {
           data: [0],
           borderColor: "#FFA500",
           fill: false,
-          label:"Fear"
+          label: "Fear"
         }, {
           data: [0],
           borderColor: "#FFFF00",
           fill: false,
-          label:"Happy"
+          label: "Happy"
         }, {
           data: [0],
           borderColor: "#0000FF",
           fill: false,
-          label:"Sad"
+          label: "Sad"
         }, {
           data: [0],
           borderColor: "#00FFFF",
           fill: false,
-          label:"Surprise"
+          label: "Surprise"
         }, {
           data: [0],
           borderColor: "#C0C0C0",
           fill: false,
-          label:"Neutral"
+          label: "Neutral"
         }]
       },
       options: {
